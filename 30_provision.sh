@@ -14,12 +14,16 @@ x86_64)
 	QEMU_FLAGS=(-smp 2)
 	;;
 arm64)
+	# https://wiki.ubuntu.com/ARM64/QEMU
+	cp /usr/share/AAVMF/AAVMF_CODE.fd flash1.img
 	QEMU_BINARY=qemu-system-aarch64
-	QEMU_FLAGS=(-smp 2 -M virt)
-	;;
+	QEMU_FLAGS=(-smp 2 -cpu cortex-a57 -M virt -pflash /usr/share/AAVMF/AAVMF_CODE.fd -pflash flash1.img)
+    ;;
 armhf)
+	# https://wiki.ubuntu.com/ARM64/QEMU
+	cp /usr/share/AAVMF/AAVMF_CODE.fd flash1.img
 	QEMU_BINARY=qemu-system-arm
-	QEMU_FLAGS=(-smp 2 -M virt)
+	QEMU_FLAGS=(-smp 2 -cpu cortex-a15 -M virt -pflash /usr/share/AAVMF/AAVMF_CODE.fd -pflash flash1.img)
 	;;
 s390x)
 	QEMU_BINARY=qemu-system-s390x
