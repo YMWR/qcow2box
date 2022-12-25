@@ -7,4 +7,4 @@ fi
 ARCH=$1
 IMG=$2
 ISO=${3:-ciiso.iso}
-qemu-system-${ARCH} -m 2G -smp 2 -hda $IMG -cdrom $ISO -nographic
+qemu-system-${ARCH} -m 2G -smp 2 -hda $IMG -cdrom $ISO -nic none -nographic
