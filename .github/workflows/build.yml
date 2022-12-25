@@ -18,8 +18,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Prepare ${{ matrix.arch }} cloud image build env
-        run: apt install -y genisoimage qemu-system-arm qemu-system-ppc qemu-system-s390x qemu-system-misc qemu-efi opensbi u-boot-qemu
+        run: apt install -y genisoimage qemu-system-arm qemu-system-ppc qemu-system-s390x qemu-system-misc qemu-efi opensbi u-boot-qemu vagrant
       - name: Fetch ${{ matrix.arch }} cloud image
         run: wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-${{ matrix.arch }}.img
       - name: Convert ${{ matrix.arch }} cloud image to box
         run: ./00_run.sh ${{ matrix.arch }} jammy-server-cloudimg-${{ matrix.arch }}.img ubuntu${{ matrix.versions }}-${{ matrix.arch }}.box
+      - name: Upload ${{ matrix.arch }} box
+        run: |
+          VERSION=$(date -I)
+          vagrant cloud auth login -t ${{ secrets.VAGRANT_TOKEN }}
+          vagrant cloud publish YMWR/ubuntu${{ matrix.versions }}-${{ matrix.arch }} $VERSION libvirt ubuntu${{ matrix.versions }}-${{ matrix.arch }}.box -f -r

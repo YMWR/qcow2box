@@ -26,5 +26,6 @@ $BASE/20_resize_img.sh $TMP_BOX
 $BASE/30_provision.sh $ARCH $TMP_BOX $TMP_CI
 $BASE/90_package.sh $BOX_NAME $TMP_BOX
 
-ls -al $TMP/$BOX_NAME
-echo $TMP/$BOX_NAME
+mv $TMP/$BOX_NAME $BASE
+ls -al $BASE/$BOX_NAME
+echo $BASE/$BOX_NAME
