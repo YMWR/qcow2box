@@ -34,8 +34,9 @@ ppc64el)
     QEMU_FLAGS=(-smp 2)
 	;;
 riscv64)
+	# https://discourse.ubuntu.com/t/ubuntu-installation-on-a-risc-v-virtual-machine-using-a-server-install-image-and-qemu/27636
 	QEMU_BINARY=qemu-system-riscv64
-	QEMU_FLAGS=(-smp 1)
+	QEMU_FLAGS=(-smp 2 -M virt -bios /usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.bin -kernel /usr/lib/u-boot/qemu-riscv64_smode/u-boot.bin)
 	;;
 *)
 	echo "Unsupported architecture"
