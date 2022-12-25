@@ -12,7 +12,7 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        arch: [arm64, s390x, ppc64el, riscv64]
+        arch: [arm64, s390x, ppc64el]
         versions: [2204]
 
     steps:
