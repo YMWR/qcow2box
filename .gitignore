@@ -1,0 +1,6 @@
+*.box
+*.iso
+*.img
+*.json
+*.qcow2
+Vagrantfile
