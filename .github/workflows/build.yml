@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Prepare ${{ matrix.arch }} cloud image build env
-        run: apt install -y genisoimage qemu-system-arm qemu-system-ppc qemu-system-s390x qemu-system-misc qemu-efi
+        run: apt install -y genisoimage qemu-system-arm qemu-system-ppc qemu-system-s390x qemu-system-misc qemu-efi opensbi u-boot-qemu
       - name: Fetch ${{ matrix.arch }} cloud image
         run: wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-${{ matrix.arch }}.img
       - name: Convert ${{ matrix.arch }} cloud image to box
