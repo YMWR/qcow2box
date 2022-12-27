@@ -7,6 +7,11 @@ fi
 BOX_NAME=$1
 IMG=$2
 
+DIR=$(dirname "$IMG")
+FILE=$(basename "$IMG")
+
+cd $DIR
+
 cat >metadata.json <<EOF
 {"provider": "libvirt", "format": "qcow2", "virtual_size": 40}
 EOF
@@ -22,4 +27,4 @@ Vagrant.configure('2') do |config|
 end
 EOF
 
-tar -cvzf $BOX_NAME metadata.json Vagrantfile $IMG
+tar -C $DIR -cvzf $BOX_NAME metadata.json Vagrantfile $FILE
