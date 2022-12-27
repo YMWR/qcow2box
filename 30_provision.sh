@@ -44,4 +44,5 @@ riscv64)
 	;;
 esac
 
-$QEMU_BINARY "${QEMU_FLAGS[@]}" -m 2G -hda $IMG -cdrom $ISO -nic none -nographic
+# -nic none can be used for Non-Network during Cloud-init
+$QEMU_BINARY "${QEMU_FLAGS[@]}" -m 2G -hda $IMG -cdrom $ISO -nographic

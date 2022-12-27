@@ -12,19 +12,19 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
+        dist: [ubuntu2204, fedora37]
         arch: [arm64, s390x, ppc64el]
-        versions: [2204]
 
     steps:
       - uses: actions/checkout@v3
-      - name: Prepare ${{ matrix.arch }} cloud image build env
+      - name: Prepare cloud image build env
         run: apt install -y genisoimage qemu-system-arm qemu-system-ppc qemu-system-s390x qemu-system-misc qemu-efi opensbi u-boot-qemu vagrant
-      - name: Fetch ${{ matrix.arch }} cloud image
-        run: wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-${{ matrix.arch }}.img
-      - name: Convert ${{ matrix.arch }} cloud image to box
-        run: ./00_run.sh ${{ matrix.arch }} jammy-server-cloudimg-${{ matrix.arch }}.img ubuntu${{ matrix.versions }}-${{ matrix.arch }}.box
-      - name: Upload ${{ matrix.arch }} box
+      - name: Fetch ${{ matrix.dist }} ${{ matrix.arch }} cloud image
+        run: ./05_fetch_img.sh ${{ matrix.dist }} ${{ matrix.arch }}
+      - name: Convert ${{ matrix.dist }} ${{ matrix.arch }} cloud image to box
+        run: ./00_run.sh ${{ matrix.arch }} base.img ${{ matrix.dist }}-${{ matrix.arch }}.box
+      - name: Upload ${{ matrix.dist }} ${{ matrix.arch }} box
         run: |
-          VERSION=$(date -I)
+          VERSION=$(date +'%y%m%d')
           vagrant cloud auth login -t ${{ secrets.VAGRANT_TOKEN }}
-          vagrant cloud publish YMWR/ubuntu${{ matrix.versions }}-${{ matrix.arch }} $VERSION libvirt ubuntu${{ matrix.versions }}-${{ matrix.arch }}.box -f -r
+          vagrant cloud publish YMWR/${{ matrix.dist }}-${{ matrix.arch }} $VERSION libvirt ${{ matrix.dist }}-${{ matrix.arch }}.box -f -r

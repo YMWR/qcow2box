@@ -13,17 +13,17 @@ FILE=$(basename "$IMG")
 cd $DIR
 
 cat >metadata.json <<EOF
-{"provider": "libvirt", "format": "qcow2", "virtual_size": 40}
+{"provider": "libvirt", "format": "qcow2", "virtual_size": 50}
 EOF
 
 cat >Vagrantfile <<EOF
 Vagrant.configure('2') do |config|
-        config.vm.provider :libvirt do |libvirt|
-                libvirt.driver = 'qemu'
-                libvirt.username = 'root'
-                libvirt.connect_via_ssh = false
-                libvirt.storage_pool_name = 'default'
-        end
+    config.vm.provider :libvirt do |libvirt|
+        libvirt.driver = 'qemu'
+        libvirt.username = 'root'
+        libvirt.connect_via_ssh = false
+        libvirt.storage_pool_name = 'default'
+    end
 end
 EOF
 
