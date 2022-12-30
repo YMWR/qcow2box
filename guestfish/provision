@@ -4,11 +4,21 @@ VAGRANT_INSECURE_KEY="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrt
 
 # Add user and set password
 useradd vagrant
-echo -n 'vagrant' | passwd -f --stdin vagrant
+usermod -aG sudo vagrant
+sed -i 's|/home/vagrant:/bin/sh|/home/vagrant:/bin/bash|g' /etc/passwd
 echo 'vagrant ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/vagrant-nopasswd
 sed -i 's,Defaults\\s*requiretty,Defaults !requiretty,' /etc/sudoers
-echo -n 'vagrant' | passwd -f --stdin root
+
+source /etc/os-release
+if [ "$ID" == "ubuntu" ]; then
+    echo -e 'vagrant\nvagrant' | passwd vagrant
+    echo -e 'vagrant\nvagrant' | passwd root
+else
+    echo -n 'vagrant' | passwd -f --stdin vagrant
+    echo -n 'vagrant' | passwd -f --stdin root
+fi
 passwd -u root
+
 
 # Add vagrant insecure key
 SSH_BASE=/home/vagrant/.ssh
@@ -19,5 +29,6 @@ chown -R vagrant:vagrant $SSH_BASE
 
 # sshd config
 sed -i 's/.*UseDNS.*/UseDNS no/' /etc/ssh/sshd_config
+sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
 touch /var/lib/provision.flag

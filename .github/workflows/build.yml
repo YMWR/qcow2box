@@ -18,11 +18,29 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Prepare cloud image build env
-        run: apt install -y genisoimage qemu-system-arm qemu-system-ppc qemu-system-s390x qemu-system-misc qemu-efi opensbi u-boot-qemu vagrant
+        run: sudo apt install -y vagrant
       - name: Fetch ${{ matrix.dist }} ${{ matrix.arch }} cloud image
         run: ./fetch_img.sh ${{ matrix.dist }} ${{ matrix.arch }}
       - name: Convert ${{ matrix.dist }} ${{ matrix.arch }} cloud image to box
-        run: ./run.sh cloud-init ${{ matrix.arch }} base.img ${{ matrix.dist }}-${{ matrix.arch }}.box
+        run: |
+          DIST=${{ matrix.dist }}
+          case "$DIST" in
+          ubuntu2204)
+            RESOLVER=guestfish
+            sudo apt install -y vagrant libguestfs-tools
+            sudo chmod +r /boot/vmlinuz-*
+            ;;
+          fedora37)
+            RESOLVER=cloud-init
+            sudo apt install -y genisoimage qemu-system-arm qemu-system-ppc qemu-system-s390x qemu-system-misc qemu-efi opensbi u-boot-qemu
+            ;;
+          *)
+            echo "Unsupported distro"
+            exit 1
+            ;;
+          esac
+
+          ./run.sh $RESOLVER ${{ matrix.arch }} base.img ${{ matrix.dist }}-${{ matrix.arch }}.box
       - name: Upload ${{ matrix.dist }} ${{ matrix.arch }} box
         run: |
           VERSION=$(date +'%y%m%d')

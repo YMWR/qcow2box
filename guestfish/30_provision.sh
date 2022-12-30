@@ -54,7 +54,7 @@ gf_relabel() {
     fi
 }
 
-INJECT_BIN=provision.sh
+INJECT_BIN=provision
 INJECT_PRE=provision.preset
 INJECT_SVC=provision.service
 
@@ -81,13 +81,13 @@ gf_relabel $SYSTEMD_PRE_DIR/$INJECT_PRE
 gf cp-a /usr/bin/bash $TARGET_BIN
 gf upload $BASE/$INJECT_BIN $TARGET_BIN
 
-if [[ $(gf exists "/etc/cloud") == "true" ]]; then
-    gf write "/etc/cloud/cloud-init.disabled" ""
-    gf_relabel "/etc/cloud/cloud-init.disabled"
-fi
-gf glob rm-rf "$SYSTEMD_LINK_DIR/cloud-init*"
-gf glob rm-rf "$SYSTEMD_LINK_DIR/cloud-final.service"
-gf glob rm-rf "$SYSTEMD_LINK_DIR/cloud-config*"
+# if [[ $(gf exists "/etc/cloud") == "true" ]]; then
+#     gf write "/etc/cloud/cloud-init.disabled" ""
+#     gf_relabel "/etc/cloud/cloud-init.disabled"
+# fi
+# gf glob rm-rf "$SYSTEMD_LINK_DIR/cloud-init*"
+# gf glob rm-rf "$SYSTEMD_LINK_DIR/cloud-final.service"
+# gf glob rm-rf "$SYSTEMD_LINK_DIR/cloud-config*"
 
 gf umount-all
 guestfish --remote -- exit
