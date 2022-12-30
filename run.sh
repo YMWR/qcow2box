@@ -11,6 +11,7 @@ fi
 # https://stackoverflow.com/a/246128
 BASE=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}"  )" &> /dev/null && pwd )
 CI=cloud-init
+GF=guestfish
 
 TMP=$(mktemp -d /tmp/qcow2box.XXXXXX)
 TMP_BOX=${TMP}/box.img
@@ -28,6 +29,9 @@ case "${RESOLVER}" in
         $BASE/$CI/10_build_ciiso.sh $TMP_CI
         $BASE/$CI/20_resize_img.sh $TMP_BOX
         $BASE/$CI/30_provision.sh $ARCH $TMP_BOX $TMP_CI
+        ;;
+    guestfish)
+        $BASE/$GF/30_provision.sh $TMP_BOX
         ;;
     *)
         echo "Unsupported Resolver"

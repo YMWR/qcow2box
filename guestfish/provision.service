@@ -1,0 +1,15 @@
+[Unit]
+Before=sshd-keygen.service
+Before=sshd.service
+Before=systemd-user-sessions.service
+ConditionPathExists=!/var/lib/provision.flag
+OnFailure=emergency.target
+OnFailureJobMode=replace-irreversibly
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/provision
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
